@@ -18,14 +18,14 @@ public class CaneBot {
 
     public void runHook() {
         if (botThread == null) {
-            gui.updateStatus("RUNNING", Color.GREEN);
+            gui.updateStatus(GuiFrame.Status.RUNNING);
             botThread = new BotThread();
             botThread.start();
             backgroundCheckThread = new BackgroundCheckThread(this);
             backgroundCheckThread.start();
         } else {
             if (botThread.isPaused()) {
-                gui.updateStatus("RUNNING", Color.GREEN);
+                gui.updateStatus(GuiFrame.Status.RUNNING);
                 botThread.unpause();
             }
         }
@@ -33,14 +33,14 @@ public class CaneBot {
 
     public void pauseHook() {
         if (botThread != null) {
-            gui.updateStatus("PAUSED", Color.ORANGE);
+            gui.updateStatus(GuiFrame.Status.PAUSED);
             botThread.pause();
         }
     }
 
     public void killHook() {
         if (botThread != null) {
-            gui.updateStatus("STOPPED", Color.RED);
+            gui.updateStatus(GuiFrame.Status.STOPPED);
             botThread.interrupt();
             botThread = null;
             backgroundCheckThread.interrupt();

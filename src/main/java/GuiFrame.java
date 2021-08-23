@@ -4,7 +4,7 @@ import java.awt.*;
 public class GuiFrame extends JFrame {
 
     JLabel status;
-    FlowLayout flowLayout;
+    GridBagLayout gridBagLayout;
 
     GuiFrame() {
         super("Sugarcane bot");
@@ -14,23 +14,45 @@ public class GuiFrame extends JFrame {
 
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("sugarcane.png")));
 
-        flowLayout = new FlowLayout();
-        flowLayout.setAlignment(FlowLayout.CENTER);
-        setLayout(flowLayout);
+        gridBagLayout = new GridBagLayout();
+        setLayout(gridBagLayout);
 
         status = new JLabel();
         status.setBackground(Color.BLACK);
-        status.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
+        status.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
         add(status);
 
-        updateStatus("WAITING TO BE STARTED", Color.RED);
+        updateStatus(Status.WAITING_FOR_START);
 
         setVisible(true);
     }
 
-    public void updateStatus(String text, Color color) {
-        status.setText(text);
-        status.setForeground(color);
+    public void updateStatus(Status status) {
+        this.status.setText(status.getText());
+        this.status.setForeground(status.getColor());
+    }
+
+    public enum Status {
+        WAITING_FOR_START("WAITING TO BE STARTED", new Color(170, 0, 0)),
+        RUNNING("RUNNING", new Color(0, 128, 0)),
+        PAUSED("PAUSED", new Color(170, 130, 0)),
+        STOPPED("STOPPED", new Color(170, 0, 0));
+
+        private String text;
+        private Color color;
+
+        Status(String text, Color color) {
+            this.text = text;
+            this.color = color;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public Color getColor() {
+            return color;
+        }
     }
 
 }

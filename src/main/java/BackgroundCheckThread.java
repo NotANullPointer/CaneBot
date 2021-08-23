@@ -1,11 +1,19 @@
+import com.sun.jna.platform.DesktopWindow;
+import com.sun.jna.platform.WindowUtils;
+import com.sun.jna.platform.win32.User32;
+
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
+
 
 public class BackgroundCheckThread extends Thread {
 
     private Robot robot;
     private final CaneBot caneBot;
-    private final Rectangle screenshotZone;
+    private boolean paused = false;
 
     public BackgroundCheckThread(CaneBot caneBot) {
         try {
@@ -13,14 +21,25 @@ public class BackgroundCheckThread extends Thread {
         } catch (AWTException e) {
             e.printStackTrace();
         }
-        this.screenshotZone = new Rectangle(10, 150, 70, 70);
         this.caneBot = caneBot;
     }
 
     @Override
-    public void run() {
+    public synchronized void run() {
         while(!isInterrupted()) {
-            BufferedImage screenshot = robot.createScreenCapture(screenshotZone);
+            BufferedImage screenshot = getMinecraftScreenshot();
+
+            if(screenshot == null) {
+                JOptionPane.showMessageDialog(new JFrame(), "No Minecraft found", "Error", JOptionPane.ERROR_MESSAGE);
+                caneBot.killHook();
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+                return;
+            }
+
             Color color = averageColor(screenshot);
 
             int red = color.getRed();
@@ -39,6 +58,18 @@ public class BackgroundCheckThread extends Thread {
         }
     }
 
+    public void pause() {
+        paused = true;
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
+
+    public void unpause() {
+        paused = false;
+    }
+
     private Color averageColor(BufferedImage bi) {
         int[] colorSum = new int[3];
         for (int x = 0; x < bi.getWidth(); x++) {
@@ -55,4 +86,15 @@ public class BackgroundCheckThread extends Thread {
         colorSum[2] /= num;
         return new Color(colorSum[0], colorSum[1], colorSum[2]);
     }
+
+    private BufferedImage getMinecraftScreenshot() {
+        DesktopWindow minecraft = WindowUtils.getAllWindows(true).stream().filter(w -> w.getTitle().startsWith("Minecraft")).findAny().orElse(null);
+        if (minecraft == null) {
+            return null;
+        }
+        Rectangle minecraftWindow = minecraft.getLocAndSize();
+        minecraftWindow.setSize(70, 70);
+        return robot.createScreenCapture(minecraftWindow);
+    }
+
 }

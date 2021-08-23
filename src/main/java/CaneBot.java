@@ -27,6 +27,7 @@ public class CaneBot {
             if (botThread.isPaused()) {
                 gui.updateStatus(GuiFrame.Status.RUNNING);
                 botThread.unpause();
+                backgroundCheckThread.unpause();
             }
         }
     }
@@ -35,6 +36,7 @@ public class CaneBot {
         if (botThread != null) {
             gui.updateStatus(GuiFrame.Status.PAUSED);
             botThread.pause();
+            backgroundCheckThread.pause();
         }
     }
 

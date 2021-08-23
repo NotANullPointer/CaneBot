@@ -34,8 +34,11 @@ public class BotThread extends Thread {
             stepSleep(1000);
             robot.mousePress(InputEvent.BUTTON1_MASK);
             while (!isInterrupted()) {
+                for(int i = 0; i<26; i++) {
+                    holdKey(Key.KEY_S);
+                    holdKey(Key.KEY_D);
+                }
                 holdKey(Key.KEY_S);
-                holdKey(Key.KEY_D);
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

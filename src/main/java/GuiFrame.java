@@ -3,8 +3,10 @@ import java.awt.*;
 
 public class GuiFrame extends JFrame {
 
-    JLabel status;
-    GridBagLayout gridBagLayout;
+    private static final int FONT_SIZE = 18;
+
+    private JLabel status;
+    private GridBagLayout gridBagLayout;
 
     GuiFrame() {
         super("Sugarcane bot");
@@ -19,7 +21,7 @@ public class GuiFrame extends JFrame {
 
         status = new JLabel();
         status.setBackground(Color.BLACK);
-        status.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
+        status.setFont(new Font(Font.SANS_SERIF, Font.BOLD, FONT_SIZE));
         add(status);
 
         updateStatus(Status.WAITING_FOR_START);
@@ -30,20 +32,24 @@ public class GuiFrame extends JFrame {
     public void updateStatus(Status status) {
         this.status.setText(status.getText());
         this.status.setForeground(status.getColor());
+        this.status.setIcon(status.getIcon());
     }
 
     public enum Status {
-        WAITING_FOR_START("WAITING TO BE STARTED", new Color(170, 0, 0)),
-        RUNNING("RUNNING", new Color(0, 128, 0)),
-        PAUSED("PAUSED", new Color(170, 130, 0)),
-        STOPPED("STOPPED", new Color(170, 0, 0));
+        WAITING_FOR_START("WAITING TO BE STARTED", new Color(170, 0, 0), "waiting.png"),
+        RUNNING("RUNNING", new Color(0, 128, 0), "running.png"),
+        PAUSED("PAUSED", new Color(170, 130, 0), "paused.png"),
+        STOPPED("STOPPED", new Color(170, 0, 0), "stopped.png");
 
         private String text;
         private Color color;
+        private Icon icon;
 
-        Status(String text, Color color) {
+        Status(String text, Color color, String iconPath) {
             this.text = text;
             this.color = color;
+            this.icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource(iconPath))
+                    .getScaledInstance(FONT_SIZE, FONT_SIZE,  java.awt.Image.SCALE_SMOOTH));
         }
 
         public String getText() {
@@ -52,6 +58,10 @@ public class GuiFrame extends JFrame {
 
         public Color getColor() {
             return color;
+        }
+
+        public Icon getIcon() {
+            return icon;
         }
     }
 

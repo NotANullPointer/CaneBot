@@ -32,7 +32,7 @@ public class BackgroundCheckThread extends Thread {
             }
 
             try {
-                sleep(500);
+                sleep(70);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }

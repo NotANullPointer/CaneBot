@@ -40,7 +40,7 @@ public class BackgroundCheckThread extends Thread {
     }
 
     private Color averageColor(BufferedImage bi) {
-        long[] colorSum = new long[3];
+        int[] colorSum = new int[3];
         for (int x = 0; x < bi.getWidth(); x++) {
             for (int y = 0; y < bi.getHeight(); y++) {
                 Color pixel = new Color(bi.getRGB(x, y));
@@ -50,6 +50,9 @@ public class BackgroundCheckThread extends Thread {
             }
         }
         int num = bi.getWidth() * bi.getHeight();
-        return new Color((int)(colorSum[0] / num), (int)(colorSum[1] / num), (int)(colorSum[2] / num));
+        colorSum[0] /= num;
+        colorSum[1] /= num;
+        colorSum[2] /= num;
+        return new Color(colorSum[0], colorSum[1], colorSum[2]);
     }
 }

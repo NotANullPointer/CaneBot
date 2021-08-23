@@ -12,6 +12,8 @@ public class GuiFrame extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("sugarcane.png")));
+
         flowLayout = new FlowLayout();
         flowLayout.setAlignment(FlowLayout.CENTER);
         setLayout(flowLayout);

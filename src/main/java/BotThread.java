@@ -34,11 +34,12 @@ public class BotThread extends Thread {
             stepSleep(1000);
             robot.mousePress(InputEvent.BUTTON1_MASK);
             while (!isInterrupted()) {
+                holdKey(Key.KEY_D, 500);
                 for(int i = 0; i<26; i++) {
-                    holdKey(Key.KEY_S);
-                    holdKey(Key.KEY_D);
+                    holdKey(Key.KEY_S, 16300);
+                    holdKey(Key.KEY_D, 16300);
                 }
-                holdKey(Key.KEY_S);
+                holdKey(Key.KEY_S, 16300);
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -46,10 +47,10 @@ public class BotThread extends Thread {
     }
 
 
-    private synchronized void holdKey(Key key) throws InterruptedException {
+    private synchronized void holdKey(Key key, int time) throws InterruptedException {
         robot.keyPress(key.getKey());
         key.setHeld(true);
-        stepSleep(randomBetween(16000, 16500));
+        stepSleep(time);
         robot.keyRelease(key.getKey());
         key.setHeld(false);
         stepSleep(randomBetween(100, 200));

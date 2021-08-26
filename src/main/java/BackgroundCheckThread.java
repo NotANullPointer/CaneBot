@@ -1,19 +1,16 @@
 import com.sun.jna.platform.DesktopWindow;
 import com.sun.jna.platform.WindowUtils;
-import com.sun.jna.platform.win32.User32;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
 
 
-public class BackgroundCheckThread extends Thread {
+public class BackgroundCheckThread extends BotThread {
 
     private Robot robot;
     private final CaneBot caneBot;
-    private boolean paused = false;
+    private volatile boolean paused = false;
 
     public BackgroundCheckThread(CaneBot caneBot) {
         try {
@@ -30,7 +27,10 @@ public class BackgroundCheckThread extends Thread {
             BufferedImage screenshot = getMinecraftScreenshot();
 
             if(screenshot == null) {
-                JOptionPane.showMessageDialog(new JFrame(), "No Minecraft found", "Error", JOptionPane.ERROR_MESSAGE);
+                new Thread(() ->
+                        JOptionPane.showMessageDialog(new JFrame(),
+                                "No Minecraft instance found", "Error", JOptionPane.ERROR_MESSAGE))
+                        .start();
                 caneBot.killHook();
                 try {
                     wait();

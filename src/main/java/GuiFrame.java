@@ -1,23 +1,46 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 public class GuiFrame extends JFrame {
 
     private static final int FONT_SIZE = 18;
 
+    private final CaneBot instance;
     private JLabel status;
-    private GridBagLayout gridBagLayout;
+    private JComboBox<String> botType;
+    private FlowLayout flowLayout;
 
-    GuiFrame() {
-        super("Sugarcane bot");
-        setSize(300, 100);
+    GuiFrame(CaneBot instance) {
+        super("MC bot");
+
+        this.instance = instance;
+        updateBotType("Sugar Cane");
+
+        setSize(300, 150);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("sugarcane.png")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("bot.png")));
 
-        gridBagLayout = new GridBagLayout();
-        setLayout(gridBagLayout);
+        flowLayout = new FlowLayout();
+        flowLayout.setVgap(15);
+        flowLayout.setHgap(50);
+        setLayout(flowLayout);
+
+        botType = new JComboBox<>(new String[]{"Sugar Cane", "Nether Wart"});
+        botType.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
+        botType.setBackground(Color.WHITE);
+        botType.setPreferredSize(new Dimension(200,25));
+        botType.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                updateBotType((String)e.getItem());
+            }
+        });
+        add(botType);
 
         status = new JLabel();
         status.setBackground(Color.BLACK);
@@ -29,10 +52,24 @@ public class GuiFrame extends JFrame {
         setVisible(true);
     }
 
+    private void updateBotType(String botType) {
+        if (botType.equalsIgnoreCase("Sugar Cane")) {
+            instance.setBotType(CaneBotThread.class);
+        } else if (botType.equalsIgnoreCase("Nether Wart")) {
+            instance.setBotType(NetherwartBotThread.class);
+        }
+    }
+
     public void updateStatus(Status status) {
         this.status.setText(status.getText());
         this.status.setForeground(status.getColor());
         this.status.setIcon(status.getIcon());
+
+        if (status == Status.RUNNING || status == Status.PAUSED) {
+            this.botType.setEnabled(false);
+        } else {
+            this.botType.setEnabled(true);
+        }
     }
 
     public enum Status {

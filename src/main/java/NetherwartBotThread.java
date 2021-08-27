@@ -17,10 +17,10 @@ public class NetherwartBotThread extends BotThread {
             robot.mousePress(InputEvent.BUTTON1_MASK);
             while (!isInterrupted()) {
                 for(int i = 0; i<26; i++) {
-                    holdKey(Key.KEY_A, 21300);
-                    holdKey(Key.KEY_S, 650);
-                    holdKey(Key.KEY_D, 21300);
-                    holdKey(Key.KEY_S, 650);
+                    holdKey(Key.KEY_A, 21800);
+                    holdKey(Key.KEY_S, 750);
+                    holdKey(Key.KEY_D, 21800);
+                    holdKey(Key.KEY_S, 750);
                 }
             }
         } catch (InterruptedException e) {
